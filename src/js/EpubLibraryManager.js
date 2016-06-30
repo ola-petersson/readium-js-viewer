@@ -60,7 +60,7 @@ define(['jquery', './ModuleConfig', './PackageParser', './workers/WorkerProxy', 
 
             //npm run chromeApp && npm run dist:chromeApp:copy:ebooks
             var checkDefaultPreloadedEbooks = function(success_callback) {
-console.debug(self.libraryData);
+
                 if (!self.libraryData) {
                     
                     success_callback(self.libraryData);
@@ -73,33 +73,87 @@ console.debug(self.libraryData);
                     return;
                 }
 
-                var rootDir = 'epubReadingSystem';
-                var rootUrl = window.location.origin + '/ebooks/' + rootDir; //.replace(/chrome-extension/g, "chrome-extension-resource") see CSP 'filesystem://' + 
-                var packagePath = 'EPUB/package.opf';
-                var packageUrl = rootUrl + '/' + packagePath;
-                var noCoverBackground = "images/covers/cover1.jpg";
-                
-                var success_ = function(jsonObj) {
-console.debug(jsonObj);
-                    var epubObj = {
-                        preloaded: true,
-                        coverHref: jsonObj.coverHref ? self._getFullUrl(packageUrl, jsonObj.coverHref) : undefined,
-                        id: jsonObj.id,
-                        rootDir : rootDir,
-                        packagePath : packagePath,
-                        title: jsonObj.title,
-                        author: jsonObj.author,
-                        rootUrl : rootUrl
-                    }
-console.debug(epubObj);
-                    self.libraryData.push(epubObj);
+                var importEPUB = function(rootDir, done_cb) {
 
-                    success_callback(self.libraryData);
+                    var rootUrl = window.location.origin + '/ebooks/' + rootDir; //.replace(/chrome-extension/g, "chrome-extension-resource") see CSP 'filesystem://' + 
+                    var epubUrl = rootUrl + '.epub';
+console.debug("IMPORTING PRELOADED EPUB ... " + epubUrl);
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('GET', epubUrl, true);
+                    xhr.responseType = 'arraybuffer';
+                    xhr.onerror = function() {
+                        done_cb();
+                    };
+
+                    xhr.onload = function (loadEvent) {
+                        var blob = new Blob([xhr.response], {
+                            type: "application/epub+zip" //ContentTypeDiscovery.identifyContentTypeFromFileName(epubUrl)
+                        });
+                        self.handleZippedEpub({
+                            file: blob,
+                            overwrite: function(originalData, replaceCallback, keepBothCallback){
+                                keepBothCallback();
+                                //replaceCallback(); 
+                            },
+                            success: function(){
+                                //Dialogs.closeModal();
+    
+                                done_cb();
+                            },
+                            progress: undefined, //Dialogs.updateProgress,
+                            error: function() {
+                                done_cb();
+                            }
+                        });
+                    };
+
+                    xhr.send();
                 };
-                var error_ = function() {
-                    success_callback(self.libraryData);
+
+                var maxEPUBsIterations = 3; //100
+
+                var importEPUBs = function() {
+                    importEPUB('epubReadingSystem', function() {
+                        importEPUB('epubReadingSystem_EX', function() {
+                            importEPUB('internal_link', function() {
+                                if (--maxEPUBsIterations > 0) {
+                                    importEPUBs();
+                                    return;
+                                }
+//console.log(self.libraryData);
+                                success_callback(self.libraryData);
+                            }); 
+                        });
+                    });
                 };
-                self.retrieveFullEpubDetails(packageUrl, rootUrl, rootDir, noCoverBackground, success_, error_);
+                importEPUBs();
+
+//                 var packagePath = 'EPUB/package.opf';
+//                 var packageUrl = rootUrl + '/' + packagePath;
+//                 var noCoverBackground = "images/covers/cover1.jpg";
+                
+//                 var success_ = function(jsonObj) {
+// console.debug(jsonObj);
+//                     var epubObj = {
+//                         preloaded: true,
+//                         coverHref: jsonObj.coverHref ? self._getFullUrl(packageUrl, jsonObj.coverHref) : undefined,
+//                         id: jsonObj.id,
+//                         rootDir : rootDir,
+//                         packagePath : packagePath,
+//                         title: jsonObj.title,
+//                         author: jsonObj.author,
+//                         rootUrl : rootUrl
+//                     }
+// console.debug(epubObj);
+//                     self.libraryData.push(epubObj);
+
+//                     success_callback(self.libraryData);
+//                 };
+//                 var error_ = function() {
+//                     success_callback(self.libraryData);
+//                 };
+//                 self.retrieveFullEpubDetails(packageUrl, rootUrl, rootDir, noCoverBackground, success_, error_);
+
 
             };
 
@@ -169,7 +223,10 @@ console.debug(epubObj);
             }).fail(error);
         },
         _refreshLibraryFromWorker : function(callback, newLibraryData){
-            this.libraryData = newLibraryData;
+
+            if (newLibraryData) {
+                this.libraryData = newLibraryData;
+            }
             callback();
         },
         handleZippedEpub : function(options){

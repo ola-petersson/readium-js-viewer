@@ -138,9 +138,9 @@
             epub_content/epubReadingSystem.epub
             dist/chrome-app/ebooks
         &&
-        npm run ncp
-            epub_content/epubReadingSystem/
-            dist/chrome-app/ebooks/epubReadingSystem/
+        npm run cpy
+            epub_content/epubReadingSystem_EX.epub
+            dist/chrome-app/ebooks
         &&
         npm run cpy
             epub_content/internal_link.epub
