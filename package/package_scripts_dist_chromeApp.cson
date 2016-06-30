@@ -128,6 +128,25 @@
             dist/chrome-app/
     '
 
+#=====================
+    'dist:chromeApp:copy:ebooks': '
+
+        npm run mkdirp
+            dist/chrome-app/ebooks
+        &&
+        npm run cpy
+            epub_content/epubReadingSystem.epub
+            dist/chrome-app/ebooks
+        &&
+        npm run ncp
+            epub_content/epubReadingSystem/
+            dist/chrome-app/ebooks/epubReadingSystem/
+        &&
+        npm run cpy
+            epub_content/internal_link.epub
+            dist/chrome-app/ebooks
+    '
+
 #        &&
 #        npm run cpy
 #            src/chrome-app/requirejs-config.js
@@ -190,6 +209,7 @@
 #    '
 
 #=====================
+# 2GB limit (see above dist:chromeApp:copy:ebooks NPM script task)
     'crx': '
 
         node node_modules/crx/bin/crx

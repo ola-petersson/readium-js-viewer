@@ -57,7 +57,52 @@ define(['jquery', './ModuleConfig', './PackageParser', './workers/WorkerProxy', 
             }
 
             var self = this;
-        
+
+            //npm run chromeApp && npm run dist:chromeApp:copy:ebooks
+            var checkDefaultPreloadedEbooks = function(success_callback) {
+console.debug(self.libraryData);
+                if (!self.libraryData) {
+                    
+                    success_callback(self.libraryData);
+                    return;
+                }
+
+                if (self.libraryData.length) {
+                    
+                    success_callback(self.libraryData);
+                    return;
+                }
+
+                var rootDir = 'epubReadingSystem';
+                var rootUrl = window.location.origin + '/ebooks/' + rootDir; //.replace(/chrome-extension/g, "chrome-extension-resource") see CSP 'filesystem://' + 
+                var packagePath = 'EPUB/package.opf';
+                var packageUrl = rootUrl + '/' + packagePath;
+                var noCoverBackground = "images/covers/cover1.jpg";
+                
+                var success_ = function(jsonObj) {
+console.debug(jsonObj);
+                    var epubObj = {
+                        preloaded: true,
+                        coverHref: jsonObj.coverHref ? self._getFullUrl(packageUrl, jsonObj.coverHref) : undefined,
+                        id: jsonObj.id,
+                        rootDir : rootDir,
+                        packagePath : packagePath,
+                        title: jsonObj.title,
+                        author: jsonObj.author,
+                        rootUrl : rootUrl
+                    }
+console.debug(epubObj);
+                    self.libraryData.push(epubObj);
+
+                    success_callback(self.libraryData);
+                };
+                var error_ = function() {
+                    success_callback(self.libraryData);
+                };
+                self.retrieveFullEpubDetails(packageUrl, rootUrl, rootDir, noCoverBackground, success_, error_);
+
+            };
+
             var indexUrl = moduleConfig.epubLibraryPath
                         ? StorageManager.getPathUrl(moduleConfig.epubLibraryPath)
                         : StorageManager.getPathUrl('/epub_library.json');
@@ -66,7 +111,8 @@ define(['jquery', './ModuleConfig', './PackageParser', './workers/WorkerProxy', 
                 console.error("Ebook library fail: " + indexUrl);
                 
                 self.libraryData = [];
-                success([]);
+
+                checkDefaultPreloadedEbooks(success);
             };
             
             var dataSuccess = function(data) {
@@ -80,7 +126,8 @@ define(['jquery', './ModuleConfig', './PackageParser', './workers/WorkerProxy', 
                 }
                 
                 self.libraryData = data;
-                success(data);
+                
+                checkDefaultPreloadedEbooks(success);
             };
 
             if (/\.json$/.test(indexUrl)) {
@@ -116,7 +163,7 @@ define(['jquery', './ModuleConfig', './PackageParser', './workers/WorkerProxy', 
                 jsonObj.rootDir = rootDir;
                 jsonObj.rootUrl = rootUrl;
                 jsonObj.noCoverBackground = noCoverBackground;
-    
+
                 success(jsonObj);
 
             }).fail(error);
