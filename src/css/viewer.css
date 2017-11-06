@@ -45,7 +45,7 @@ html#simpleViewer .icon-library{
 #readium-toc-body{
   display: none;
   overflow: auto;
-  background: #f3f3f3;
+  /*background: #f3f3f3;*/
   border-right: solid 2px rgba(0,0,0,.15);
 }
 
@@ -69,7 +69,7 @@ direction: rtl;
 
 .toc-visible #readium-toc-body{
   display: inline-block;
-  width: 30%;
+  /*width: 30%;*/
 }
 
 .toc-visible #reading-area{
@@ -277,7 +277,7 @@ html[data-theme=night-theme] #right-page-btn:hover
     left: 0px;
     right: 0px;
     bottom: 0px;
-    top: 38px;
+    top: 0px;
 
     overflow: hidden;
 }
@@ -286,9 +286,6 @@ html[data-theme=night-theme] #right-page-btn:hover
 .contentFocus {
     /* box-shadow: 0px 0px 5px #6fb5f1 !important; */
     
-    outline: #6fb5f1 dotted 1px !important;
-    
-    outline-offset: -3px;
 }
  
 #epub-reader-container {

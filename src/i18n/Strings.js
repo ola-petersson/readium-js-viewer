@@ -40,7 +40,7 @@ function(de, es, en_US, fr, it, id, ja, ko, pt_BR, zh_CN, zh_TW){
     var language = navigator.userLanguage || navigator.language;
 //FORCE HERE (for testing)
 //language="es";
-    console.log("Language: [" + language + "]");
+    //console.log("Language: [" + language + "]");
 
     var allowEnglishFallback = true;
 

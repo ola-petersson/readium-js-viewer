@@ -114,8 +114,8 @@ BookmarkData){
         ) : undefined;
         
         if (appUrl) {
-            console.log("EPUB URL absolute: " + ebookURL);
-            console.log("App URL: " + appUrl);
+            //console.log("EPUB URL absolute: " + ebookURL);
+            //console.log("App URL: " + appUrl);
             
             ebookURL = ebookURL.replace(CORS_PROXY_HTTP_TOKEN, CORS_PROXY_HTTP_TOKEN_ESCAPED);
             ebookURL = ebookURL.replace(CORS_PROXY_HTTPS_TOKEN, CORS_PROXY_HTTPS_TOKEN_ESCAPED);
@@ -131,7 +131,7 @@ BookmarkData){
             
             ebookURL = ebookURL.replace(regex_CORS_PROXY_HTTPs_TOKEN_ESCAPED, "/$1://");
             
-            console.log("EPUB URL relative to app: " + ebookURL);
+            //console.log("EPUB URL relative to app: " + ebookURL);
         }
         
         return ebookURL;
@@ -537,6 +537,7 @@ BookmarkData){
                 console.error(err);
                 
             } finally {
+                onTocClick(e);
                 //e.preventDefault();
                 //e.stopPropagation();
                 return false;
@@ -725,14 +726,18 @@ BookmarkData){
     // See onSwipeLeft() onSwipeRight() in gesturesHandler.
     // See nextPage() prevPage() in this class.
     var updateUI = function(pageChangeData){
-        if(pageChangeData.paginationInfo.canGoLeft())
-            $("#left-page-btn").show();
-        else
-            $("#left-page-btn").hide();
-        if(pageChangeData.paginationInfo.canGoRight())
-            $("#right-page-btn").show();
-        else
-            $("#right-page-btn").hide();
+        if(pageChangeData.paginationInfo.canGoLeft()){
+            $("#left-page-btn").show(); $("#left-page-btn").attr('title', ""); $("#left-page-btn").attr('data-original-title', "");
+        }
+        else{
+            $("#left-page-btn").hide(); $("#left-page-btn").attr('title', ""); $("#left-page-btn").attr('data-original-title', "");
+        }
+        if(pageChangeData.paginationInfo.canGoRight()){
+            $("#right-page-btn").show(); $("#right-page-btn").attr('title', ""); $("#right-page-btn").attr('data-original-title', "");
+        }
+        else{
+            $("#right-page-btn").hide(); $("#right-page-btn").attr('title', ""); $("#right-page-btn").attr('data-original-title', "");
+        }
     }
 
     var savePlace = function(){
@@ -742,7 +747,9 @@ BookmarkData){
         if (!ebookURL) return;
 
         var bookmark = readium.reader.bookmarkCurrentPage();
-
+        if(currentEpub.bookID != 0){
+            savePage(bookmark);
+        }
         // Note: automatically JSON.stringify's the passed value!
         // ... and bookmarkCurrentPage() is already JSON.toString'ed, so that's twice!
         Settings.put(ebookURL_filepath, bookmark, $.noop);
@@ -810,11 +817,11 @@ BookmarkData){
                     //BookmarkData
                     var bookmarkDataSelection = readium.reader.plugins.highlights.addSelectionHighlight(tempId, "temp-highlight");
                     if (bookmarkDataSelection) {
-                        setTimeout(function(){
-                            readium.reader.plugins.highlights.removeHighlight(tempId);
-                        }, 500);
+                        //setTimeout(function(){
+                            //readium.reader.plugins.highlights.removeHighlight(tempId);
+                        //}, 500);
 
-                        console.log("Selection shared bookmark:");
+                        //console.log("Selection shared bookmark:");
                         debugBookmarkData(bookmarkDataSelection);
                         bookmark.contentCFI = bookmarkDataSelection.contentCFI;
                     }
@@ -934,7 +941,7 @@ BookmarkData){
         Keyboard.on(Keyboard.ToolbarShow, 'reader', showTB);
 
         Keyboard.on(Keyboard.PagePrevious, 'reader', function(){
-            if (!isWithinForbiddenNavKeysArea()) prevPage();
+            if (true) prevPage();
         });
 
         Keyboard.on(Keyboard.PagePreviousAlt, 'reader', prevPage);
@@ -942,7 +949,7 @@ BookmarkData){
         Keyboard.on(Keyboard.PageNextAlt, 'reader', nextPage);
 
         Keyboard.on(Keyboard.PageNext, 'reader', function(){
-            if (!isWithinForbiddenNavKeysArea()) nextPage();
+            if (true) nextPage();
         });
 
         Keyboard.on(Keyboard.FullScreenToggle, 'reader', toggleFullScreen);
@@ -1057,13 +1064,13 @@ BookmarkData){
         $('nav').attr("aria-label", Strings.i18n_toolbar);
         $('nav').append(ReaderNavbar({strings: Strings, dialogs: Dialogs, keyboard: Keyboard}));
         installReaderEventHandlers();
-        document.title = "Readium";
+        //document.title = "Readium";
         $('#zoom-fit-width a').on('click', setFitWidth);
         $('#zoom-fit-screen a').on('click', setFitScreen);
         $('#zoom-custom a').on('click', enableCustom);
         $('.zoom-wrapper input').on('change', setCustom);
 
-        spin(true);
+        //spin(true);
     }
 
     var loadReaderUI = function (data) {
@@ -1099,8 +1106,8 @@ BookmarkData){
 
     var initReadium = function(){
 
-        console.log("MODULE CONFIG:");
-        console.log(moduleConfig);
+        //console.log("MODULE CONFIG:");
+        //console.log(moduleConfig);
 
         Settings.getMultiple(['reader', ebookURL_filepath], function(settings){
 
@@ -1159,7 +1166,7 @@ BookmarkData){
             var urlParams = Helpers.getURLQueryParams();
             var goto = urlParams['goto'];
             if (goto) {
-                console.log("Goto override? " + goto);
+                //console.log("Goto override? " + goto);
                 
                 try {
                     var gotoObj = JSON.parse(goto);
@@ -1206,7 +1213,7 @@ BookmarkData){
             ReadiumSDK.on(ReadiumSDK.Events.PLUGINS_LOADED, function () {
                 Globals.logEvent("PLUGINS_LOADED", "ON", "EpubReader.js");
                 
-                console.log('PLUGINS INITIALIZED!');
+                //console.log('PLUGINS INITIALIZED!');
 
                 if (!readium.reader.plugins.highlights) {
                     $('.icon-annotations').css("display", "none");
@@ -1217,8 +1224,9 @@ BookmarkData){
                     });
 
                     readium.reader.plugins.highlights.on("annotationClicked", function(type, idref, cfi, id) {
-        console.debug("ANNOTATION CLICK: " + id);
-                        readium.reader.plugins.highlights.removeHighlight(id);
+                        console.debug("ANNOTATION CLICK: " + id);
+                        CommentOnClick(id);
+                        //readium.reader.plugins.highlights.removeHighlight(id);
                     });
                 }
     
@@ -1346,7 +1354,7 @@ BookmarkData){
             readium.reader.on(ReadiumSDK.Events.CONTENT_DOCUMENT_LOAD_START, function($iframe, spineItem) {
                 Globals.logEvent("CONTENT_DOCUMENT_LOAD_START", "ON", "EpubReader.js [ " + spineItem.href + " ]");
                 
-                spin(true);
+                //spin(true);
             });
 
             EpubReaderMediaOverlays.init(readium);
@@ -1426,6 +1434,21 @@ BookmarkData){
 
 
                 loadEbook(readerSettings, openPageRequest);
+
+                switch(layoutType){
+                    case 1:
+                    readium.reader.updateSettings({ syntheticSpread:  "single", scroll: "auto"});
+                    $j("#layoutBtn").css("background-image", "url('../../common/icons/single_white.png')");
+                    break;
+                    case 2:
+                    readium.reader.updateSettings({ syntheticSpread:  "double", scroll: "auto"});
+                    $j("#layoutBtn").css("background-image", "url('../../common/icons/double_white.png')");
+                    break;
+                    case 0:
+                    readium.reader.updateSettings({ syntheticSpread:  "auto", scroll: "scroll-continuous"});
+                    $j("#layoutBtn").css("background-image", "url('../../common/icons/scroll_white.png')");
+                    break;
+                }
             });
         });
     }

@@ -46,8 +46,8 @@ define(['jquery', './EpubLibrary', './EpubReader', 'readium_shared_js/helpers', 
             
             var state = history.state;
             
-            console.debug("BROWSER HISTORY POP STATE:");
-            console.log(state);
+            //console.debug("BROWSER HISTORY POP STATE:");
+            //console.log(state);
             
             if (state && state.epub) {
                 readerView(state);
@@ -56,24 +56,24 @@ define(['jquery', './EpubLibrary', './EpubReader', 'readium_shared_js/helpers', 
                 libraryView(state.epubs);
             }
             else {
-                libraryView();
+                //libraryView();
             }
         });
         
         pushState = function(data, title, url){
-            console.debug("BROWSER HISTORY PUSH STATE:");
+            //console.debug("BROWSER HISTORY PUSH STATE:");
             //console.log(title);
-            console.log(url);
-            console.log(data);
-            history.pushState(data, title, url);
+            //console.log(url);
+            //console.log(data);
+            //history.pushState(data, title, url);
         };
         
         replaceState = function(data, title, url){
-            console.debug("BROWSER HISTORY REPLACE STATE:");
+            //console.debug("BROWSER HISTORY REPLACE STATE:");
             //console.log(title);
-            console.log(url);
-            console.log(data);
-            history.replaceState(data, title, url);
+            //console.log(url);
+            //console.log(data);
+            //history.replaceState(data, title, url);
         };
     }
 
@@ -226,10 +226,10 @@ define(['jquery', './EpubLibrary', './EpubReader', 'readium_shared_js/helpers', 
                 } else {
 
                     var file = files[0];
-                    console.log("File drag-n-drop:");
-                    console.log(file.name);
-                    console.log(file.type);
-                    console.log(file.size);
+                    //console.log("File drag-n-drop:");
+                    //console.log(file.name);
+                    //console.log(file.type);
+                    //console.log(file.size);
                     
                     if (file.type == "application/epub+zip" || (/\.epub[3?]$/.test(file.name))) {
                         var urlParams = Helpers.getURLQueryParams();

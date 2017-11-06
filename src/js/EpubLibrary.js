@@ -632,7 +632,7 @@ Helpers){
         $('#epub-upload').on('change', handleFileSelect);
         $('#dir-upload').on('change', handleDirSelect);
 
-        document.title = Strings.i18n_readium_library;
+        //document.title = Strings.i18n_readium_library;
 
         $('#settings-dialog').on('hidden.bs.modal', function () {
 
