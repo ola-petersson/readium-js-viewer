@@ -11,6 +11,13 @@
 
 * `npm run prepare:all`
 
+A browser should open and display the library view
+
+## Test
+
+* `npm run http`
+
+
 ## Build
 
 * `npm run build`
