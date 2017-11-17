@@ -519,7 +519,7 @@ BookmarkData){
         $('#readium-toc-body').on('click', 'a', function(e)
         {
             try {
-                spin(true);
+                //spin(true);
     
                 var href = $(this).attr('href');
                 //href = tocUrl ? new URI(href).absoluteTo(tocUrl).toString() : href;
