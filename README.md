@@ -17,8 +17,8 @@
 
 copy
 
-build-output/_single-bundle/readium-js-viewer_all.js
-build-output/_single-bundle/readium-js-viewer_all.bundles.js
-build-output/_single-bundle/readium-js-viewer_all.js.map
+* `build-output/_single-bundle/readium-js-viewer_all.js`
+* `build-output/_single-bundle/readium-js-viewer_all.bundles.js`
+* `build-output/_single-bundle/readium-js-viewer_all.js.map`
 
 to scripts folder in Instudy
