@@ -1435,7 +1435,7 @@ BookmarkData){
 
                 loadEbook(readerSettings, openPageRequest);
 
-                readium.reader.updateSettings({ scroll: "scroll-doc"});
+                readium.reader.updateSettings({ syntheticSpread:  "single", scroll: "scroll-doc"});
 
                 // switch(layoutType){
                 //     case 1:
