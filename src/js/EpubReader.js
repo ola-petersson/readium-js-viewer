@@ -1435,20 +1435,22 @@ BookmarkData){
 
                 loadEbook(readerSettings, openPageRequest);
 
-                switch(layoutType){
-                    case 1:
-                    readium.reader.updateSettings({ syntheticSpread:  "single", scroll: "auto"});
-                    $j("#layoutBtn").css("background-image", "url('../../common/icons/single_white.png')");
-                    break;
-                    case 2:
-                    readium.reader.updateSettings({ syntheticSpread:  "double", scroll: "auto"});
-                    $j("#layoutBtn").css("background-image", "url('../../common/icons/double_white.png')");
-                    break;
-                    case 0:
-                    readium.reader.updateSettings({ syntheticSpread:  "auto", scroll: "scroll-continuous"});
-                    $j("#layoutBtn").css("background-image", "url('../../common/icons/scroll_white.png')");
-                    break;
-                }
+                readium.reader.updateSettings({ scroll: "scroll-doc"});
+
+                // switch(layoutType){
+                //     case 1:
+                //     readium.reader.updateSettings({ syntheticSpread:  "single", scroll: "auto"});
+                //     $j("#layoutBtn").css("background-image", "url('../../common/icons/single_white.png')");
+                //     break;
+                //     case 2:
+                //     readium.reader.updateSettings({ syntheticSpread:  "double", scroll: "auto"});
+                //     $j("#layoutBtn").css("background-image", "url('../../common/icons/double_white.png')");
+                //     break;
+                //     case 0:
+                //     readium.reader.updateSettings({ syntheticSpread:  "auto", scroll: "scroll-continuous"});
+                //     $j("#layoutBtn").css("background-image", "url('../../common/icons/scroll_white.png')");
+                //     break;
+                // }
             });
         });
     }
