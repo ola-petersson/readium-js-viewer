@@ -639,26 +639,28 @@ BookmarkData){
         };
     }
 
-    screenfull.onchange(function(e){
-        var titleText;
+    if(screenfull) {
+        screenfull.onchange(function(e){
+            var titleText;
 
-        if (screenfull.isFullscreen)
-        {
-            titleText = Strings.exit_fullscreen+ ' [' + Keyboard.FullScreenToggle + ']';
-            $('#buttFullScreenToggle span').removeClass('glyphicon-resize-full');
-            $('#buttFullScreenToggle span').addClass('glyphicon-resize-small');
-            $('#buttFullScreenToggle').attr('aria-label', titleText);
-            $('#buttFullScreenToggle').attr('title', titleText);
-        }
-        else
-        {
-            titleText = Strings.enter_fullscreen + ' [' + Keyboard.FullScreenToggle + ']';
-            $('#buttFullScreenToggle span').removeClass('glyphicon-resize-small');
-            $('#buttFullScreenToggle span').addClass('glyphicon-resize-full');
-            $('#buttFullScreenToggle').attr('aria-label', titleText);
-            $('#buttFullScreenToggle').attr('title', titleText);
-        }
-    });
+            if (screenfull.isFullscreen)
+            {
+                titleText = Strings.exit_fullscreen+ ' [' + Keyboard.FullScreenToggle + ']';
+                $('#buttFullScreenToggle span').removeClass('glyphicon-resize-full');
+                $('#buttFullScreenToggle span').addClass('glyphicon-resize-small');
+                $('#buttFullScreenToggle').attr('aria-label', titleText);
+                $('#buttFullScreenToggle').attr('title', titleText);
+            }
+            else
+            {
+                titleText = Strings.enter_fullscreen + ' [' + Keyboard.FullScreenToggle + ']';
+                $('#buttFullScreenToggle span').removeClass('glyphicon-resize-small');
+                $('#buttFullScreenToggle span').addClass('glyphicon-resize-full');
+                $('#buttFullScreenToggle').attr('aria-label', titleText);
+                $('#buttFullScreenToggle').attr('title', titleText);
+            }
+        });
+    }
 
     var unhideUI = function(){
         hideLoop();
