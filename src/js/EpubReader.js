@@ -631,15 +631,15 @@ BookmarkData){
     var isChromeExtensionPackagedApp = (typeof chrome !== "undefined") && chrome.app
               && chrome.app.window && chrome.app.window.current; // a bit redundant?
 
-    if (isChromeExtensionPackagedApp) {
-        screenfull.onchange = function(e) {
-            if (chrome.app.window.current().isFullscreen()) {
-                chrome.app.window.current().restore();
-            }
-        };
-    }
-
-    if(screenfull) {
+    if(screenfull.enabled) {
+        if (isChromeExtensionPackagedApp) {
+            screenfull.onchange = function(e) {
+                if (chrome.app.window.current().isFullscreen()) {
+                    chrome.app.window.current().restore();
+                }
+            };
+        }
+        
         screenfull.onchange(function(e){
             var titleText;
 
